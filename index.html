@@ -13,6 +13,12 @@
     <title>Github Animated Readme Generator</title>
   </head>
   <body>
+
+    <div>
+      Please Introduce Yourself:
+      <input id="message" type="text" value="HELLO WORLD\nI'M A SOFTWARE DEVELOPER" />
+      <button onclick="generate()">GENERATE!</button>
+    </div>
   </body>
 </html>
 
@@ -54,7 +60,7 @@ const style = new PIXI.TextStyle({
     align: 'center',
 });
 
-const text = new PIXI.Text('Hello World', style);
+const text = new PIXI.Text('HELLO WORLD', style);
 text.x = 400;
 text.y = 75;
 text.anchor.set(0.5);
@@ -86,11 +92,16 @@ const animate = async (msg) => {
   }
 
   gif.on('finished', function(blob) {
-    saveAs(blob, 'a.gif');
+    saveAs(blob, 'your_cool_intro.gif');
   });
   const rendered = gif.render();
   console.log(rendered);
 };
 
-animate(`HELLO WORLD\nI'M A SOFTWARE DEVELOPER`);
+const generate = () => {
+  const message = document.getElementById('message')
+    .value
+    .replace('\\n', '\n');
+  animate(message);
+};
 </script>
