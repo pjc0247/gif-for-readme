@@ -1,0 +1,96 @@
+<html>
+  <head>
+    <style>
+      canvas {
+        border: 1px solid black;
+      }
+
+      @font-face {
+        font-family: "pixel";
+        src: url("ttf/joystixmonospace.ttf");
+      }
+    </style>
+    <title>Github Animated Readme Generator</title>
+  </head>
+  <body>
+  </body>
+</html>
+
+<script src="filesaver/filesaver.min.js"></script>
+<script src="pixi/pixi.min.js"></script>
+<script src="gif/gif.js"></script>
+<script>
+const app = new PIXI.Application({
+  width: 800,
+  height: 150,
+  backgroundColor: 0xffffff,
+  forceCanvas: true,
+});
+document.body.appendChild(app.view);
+
+console.log(app);
+
+const gif = new GIF({
+  workers: 2,
+  workerScript: 'gif/gif.worker.js',
+  quality: 10,
+  debug: true,
+  width: app.view.width,
+  height: app.view.height,
+});
+
+const style = new PIXI.TextStyle({
+    fontFamily: 'pixel',
+    fontSize: 36,
+    fontWeight: 'bold',
+    fill: 'white', // gradient
+    stroke: 'black',
+    strokeThickness: 4,
+    dropShadow: true,
+    dropShadowColor: '#000000',
+    dropShadowBlur: 0,
+    dropShadowAngle: Math.PI / 6,
+    dropShadowDistance: 3,
+    align: 'center',
+});
+
+const text = new PIXI.Text('Hello World', style);
+text.x = 400;
+text.y = 75;
+text.anchor.set(0.5);
+
+app.stage.addChild(text);
+
+const sleep = (ms) => {
+  gif.addFrame(app.view, { delay: ms, copy: true });
+  return new Promise(resolve => setTimeout(() => resolve(), ms));
+}
+const typeAndFadeOut = async (msg) => {
+  text.text = '';
+  for (let i=0;i<msg.length;i++) {
+    text.text = msg.substr(0, i + 1);
+    await sleep(80);
+  }
+  await sleep(500);
+  for (let i=0;i<msg.length;i++) {
+    text.text = msg.substr(0, msg.length - (i + 1));
+    await sleep(46 - 30 * (i / msg.length));
+  }
+};
+
+const animate = async (msg) => {
+  const lines = msg.split('\n');
+
+  for (const line of lines) {
+    await typeAndFadeOut(line);
+  }
+
+  gif.on('finished', function(blob) {
+    saveAs(blob, 'a.gif');
+  });
+  const rendered = gif.render();
+  console.log(rendered);
+};
+
+animate(`HELLO WORLD\nI'M A SOFTWARE DEVELOPER`);
+</script>
