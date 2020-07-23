@@ -36,14 +36,18 @@ document.body.appendChild(app.view);
 
 console.log(app);
 
-const gif = new GIF({
-  workers: 2,
-  workerScript: 'gif/gif.worker.js',
-  quality: 10,
-  debug: true,
-  width: app.view.width,
-  height: app.view.height,
-});
+let gif = null;
+
+const createGifEncoder = () => {
+  return new GIF({
+    workers: 2,
+    workerScript: 'gif/gif.worker.js',
+    quality: 10,
+    debug: true,
+    width: app.view.width,
+    height: app.view.height,
+  });
+};
 
 const style = new PIXI.TextStyle({
     fontFamily: 'pixel',
@@ -86,6 +90,7 @@ const typeAndFadeOut = async (msg) => {
 
 const animate = async (msg) => {
   const lines = msg.split('\n');
+  gif = createGifEncoder();
 
   for (const line of lines) {
     await typeAndFadeOut(line);
