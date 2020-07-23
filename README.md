@@ -15,4 +15,4 @@ Todo list
 ----
 * [ ] More fonts!
 * [ ] More animations!
-* [ ] Custom Backgrounds with JavaScript
+* [ ] Custom Backgrounds (using JavaScript, GLSL or something?)
