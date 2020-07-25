@@ -1,8 +1,44 @@
 <html>
   <head>
+    <title>Github Animated Readme Generator</title>
+    <link rel="stylesheet" href="bulma/bulma.min.css">
     <style>
-      canvas {
-        border: 1px solid black;
+      body {
+        background: linear-gradient(#82CAE0, #9CCAF7);
+        overflow-y: hidden;
+      }
+      #title {
+        position: fixed;
+        left: 0;
+        top: 220px;
+        width: 100%;
+        font-size: 48px;
+        color: white;
+
+        font-family: "pixel";
+        text-shadow: 5px 5px black;
+        text-align: center;
+      }
+      #canvas-box {
+        position: fixed;
+        left: calc(50% - 410px);
+        top: 300px;
+        width: 820px;
+        height: 170px;
+        padding: 10px 10px 5px 10px;
+      }
+      #input-box {
+        position: fixed;
+        left: calc(50% - 370px);
+        top: 490px;
+        width: 760px;
+      }
+      #input-and-submit {
+        display: flex;
+      }
+      #input-and-submit input {
+        flex: 1;
+        margin-right: 10px;
       }
 
       @font-face {
@@ -10,14 +46,20 @@
         src: url("ttf/joystixmonospace.ttf");
       }
     </style>
-    <title>Github Animated Readme Generator</title>
   </head>
   <body>
 
-    <div>
+    <div id="title">
+      GIF-for-README
+    </div>
+    <div id="canvas-box" class="box">
+    </div>
+    <div id="input-box">
       Please Introduce Yourself:
-      <input id="message" type="text" value="HELLO WORLD\nI'M A SOFTWARE DEVELOPER" />
-      <button onclick="generate()">GENERATE!</button>
+      <div id="input-and-submit">
+        <input id="message" class="input" type="text" value="HELLO WORLD\nI'M A SOFTWARE DEVELOPER" />
+        <button class="button is-primary" onclick="generate()">GENERATE!</button>
+      </div>
     </div>
   </body>
 </html>
@@ -32,7 +74,7 @@ const app = new PIXI.Application({
   backgroundColor: 0xffffff,
   forceCanvas: true,
 });
-document.body.appendChild(app.view);
+document.getElementById('canvas-box').appendChild(app.view);
 
 console.log(app);
 
@@ -90,7 +132,10 @@ const typeAndFadeOut = async (msg) => {
 
 const animate = async (msg) => {
   const lines = msg.split('\n');
+
+  text.text = '';
   gif = createGifEncoder();
+  gif.addFrame(app.view, { copy: true });
 
   for (const line of lines) {
     await typeAndFadeOut(line);
