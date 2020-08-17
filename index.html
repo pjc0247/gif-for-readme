@@ -2,6 +2,7 @@
   <head>
     <title>Github Animated Readme Generator</title>
     <link rel="stylesheet" href="bulma/bulma.min.css">
+    <link rel="stylesheet" href="etc/spin.css">
     <style>
       body {
         background: linear-gradient(#82CAE0, #9CCAF7);
@@ -48,6 +49,7 @@
     </style>
   </head>
   <body>
+    <div id="app"></div>
 
     <div id="title">
       GIF-for-README
@@ -64,9 +66,35 @@
   </body>
 </html>
 
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
+<script src="https://unpkg.com/htm@2.2.1" crossorigin></script>
+<script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
 <script src="filesaver/filesaver.min.js"></script>
 <script src="pixi/pixi.min.js"></script>
 <script src="gif/gif.js"></script>
+<script src="etc/spin.js"></script>
+
+<script type="module">
+const { createElement, useState } = React;
+const render = ReactDOM.render;
+const html = htm.bind(createElement);
+
+function ClickCounter() {
+  const [count, setCount] = useState(0);
+  
+  return html`
+    <div>
+      <button onClick=${() => setCount(count + 1)}>
+        Clicked ${count} times
+      </button>
+    </div>
+  `;
+}
+
+render(html`<${ClickCounter}/>`, document.getElementById("app"));
+</script>
+
 <script>
 const app = new PIXI.Application({
   width: 800,
@@ -141,8 +169,10 @@ const animate = async (msg) => {
     await typeAndFadeOut(line);
   }
 
+  const spin = new Spin.Spinner({}).spin(document.getElementById('canvas-box'));
   gif.on('finished', function(blob) {
     saveAs(blob, 'your_cool_intro.gif');
+    spin.stop();
   });
   const rendered = gif.render();
   console.log(rendered);
